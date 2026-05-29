@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Developer Mastery — Prashanth's Interactive Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: #1e1e2e;
+    --accent1: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --accent4: #10b981;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #0d1117;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,.35) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6,182,212,.2) 0%, transparent 60%),
+      var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.03) 40px),
+                      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,.03) 40px);
+  }
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    border: 1px solid rgba(6,182,212,.3);
+    padding: .3rem .9rem;
+    border-radius: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .hero h1 span { color: var(--accent1); }
+  .hero p {
+    max-width: 600px;
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  /* ── NAV PILLS ── */
+  .nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    justify-content: center;
+    padding: 0 2rem 3rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    padding: .45rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all .2s;
+    background: transparent;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .pill.active, .pill:hover {
+    border-color: var(--accent1);
+    color: #fff;
+    background: rgba(124,58,237,.15);
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+
+  .section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+    display: none;
+  }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .section-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .icon-purple { background: rgba(124,58,237,.2); border: 1px solid rgba(124,58,237,.4); }
+  .icon-cyan   { background: rgba(6,182,212,.2);  border: 1px solid rgba(6,182,212,.4); }
+  .icon-amber  { background: rgba(245,158,11,.2); border: 1px solid rgba(245,158,11,.4); }
+  .icon-green  { background: rgba(16,185,129,.2); border: 1px solid rgba(16,185,129,.4); }
+  .icon-red    { background: rgba(239,68,68,.2);  border: 1px solid rgba(239,68,68,.4); }
+  .icon-indigo { background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.4); }
+
+  .section-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+  .section-header p { color: var(--muted); font-size: .9rem; margin-top: .2rem; }
+
+  /* ── CARDS ── */
+  .cards { display: grid; gap: 1rem; }
+  .cards-2 { grid-template-columns: 1fr 1fr; }
+  .cards-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 640px) {
+    .cards-2, .cards-3 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--accent1); transform: translateY(-2px); }
+  .card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8rem;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: .6rem;
+  }
+  .card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+  .card p { font-size: .9rem; color: var(--muted); }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .compare-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    padding: .75rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    color: var(--muted);
+  }
+  .compare-table td {
+    padding: .75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compare-table tr:hover td { background: var(--surface); }
+  .badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .7rem;
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .badge-purple { background: rgba(124,58,237,.2); color: #a78bfa; border: 1px solid rgba(124,58,237,.3); }
+  .badge-cyan   { background: rgba(6,182,212,.2);  color: #67e8f9; border: 1px solid rgba(6,182,212,.3); }
+  .badge-amber  { background: rgba(245,158,11,.2); color: #fcd34d; border: 1px solid rgba(245,158,11,.3); }
+  .badge-green  { background: rgba(16,185,129,.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,.3); }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  .code-label {
+    background: var(--surface);
+    padding: .5rem 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .code-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-red    { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green  { background: #28c840; }
+  pre {
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem;
+    line-height: 1.7;
+  }
+  .kw  { color: #c678dd; }
+  .str { color: #98c379; }
+  .cm  { color: #5c6370; font-style: italic; }
+  .fn  { color: #61afef; }
+  .tag { color: #e06c75; }
+  .val { color: #d19a66; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin: 1rem 0;
+    border-left: 3px solid;
+    font-size: .92rem;
+  }
+  .callout-info   { background: rgba(6,182,212,.08);  border-color: var(--accent2); }
+  .callout-warn   { background: rgba(245,158,11,.08); border-color: var(--accent3); }
+  .callout-tip    { background: rgba(16,185,129,.08); border-color: var(--accent4); }
+  .callout-danger { background: rgba(239,68,68,.08);  border-color: #ef4444; }
+  .callout strong { display: block; font-family: 'IBM Plex Mono', monospace; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+  .callout-info strong   { color: var(--accent2); }
+  .callout-warn strong   { color: var(--accent3); }
+  .callout-tip strong    { color: var(--accent4); }
+  .callout-danger strong { color: #f87171; }
+
+  /* ── STEP LIST ── */
+  .steps { display: flex; flex-direction: column; gap: 1.2rem; }
+  .step {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(124,58,237,.2);
+    border: 1px solid rgba(124,58,237,.4);
+    color: #a78bfa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .8rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: .15rem;
+  }
+  .step-body h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    margin-bottom: .25rem;
+  }
+  .step-body p { font-size: .9rem; color: var(--muted); }
+
+  /* ── VS DIVIDER ── */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin: 1.5rem 0;
+  }
+  .vs-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding-top: 2rem;
+  }
+  .vs-badge {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vs-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .vs-card h4 { font-family: 'Syne', sans-serif; font-size: 1rem; margin-bottom: .6rem; }
+  .vs-card ul { list-style: none; font-size: .88rem; color: var(--muted); }
+  .vs-card ul li::before { content: '→ '; color: var(--accent1); }
+  .vs-card ul li { margin-bottom: .3rem; }
+
+  /* ── TOOL TAGS ── */
+  .tool-row { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0; }
+  .tool-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem;
+    padding: .25rem .65rem;
+    border-radius: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* ── QUIZ ── */
+  .quiz-q { font-weight: 500; margin-bottom: .75rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+  .quiz-opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    cursor: pointer;
+    font-size: .9rem;
+    transition: all .2s;
+    text-align: left;
+    color: var(--text);
+  }
+  .quiz-opt:hover { border-color: var(--accent1); background: rgba(124,58,237,.08); }
+  .quiz-opt.correct { border-color: var(--accent4) !important; background: rgba(16,185,129,.1) !important; color: #6ee7b7; }
+  .quiz-opt.wrong   { border-color: #ef4444 !important; background: rgba(239,68,68,.1) !important; color: #f87171; }
+  .quiz-feedback { font-size: .88rem; color: var(--muted); padding: .6rem 1rem; background: var(--surface2); border-radius: 8px; display: none; }
+  .quiz-feedback.show { display: block; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: .5rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    border-radius: 2px;
+    transition: width .4s;
+  }
+
+  h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; margin: 1.5rem 0 .6rem; }
+  p  { margin-bottom: .75rem; }
+  strong { color: #c9d1d9; font-weight: 500; }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 2rem 0;
+  }
+
+  /* Roadmap timeline */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: .5rem;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent1), var(--accent2), var(--accent4));
+  }
+  .tl-item {
+    position: relative;
+    padding: 0 0 2rem 1.5rem;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -1.6rem;
+    top: .3rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent1);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 8px rgba(124,58,237,.6);
+  }
+  .tl-dot.cyan  { background: var(--accent2); box-shadow: 0 0 8px rgba(6,182,212,.6); }
+  .tl-dot.amber { background: var(--accent3); box-shadow: 0 0 8px rgba(245,158,11,.6); }
+  .tl-dot.green { background: var(--accent4); box-shadow: 0 0 8px rgba(16,185,129,.6); }
+  .tl-phase {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--accent1);
+    margin-bottom: .3rem;
+  }
+  .tl-item:nth-child(2) .tl-phase { color: var(--accent2); }
+  .tl-item:nth-child(3) .tl-phase { color: var(--accent3); }
+  .tl-item:nth-child(4) .tl-phase { color: var(--accent4); }
+  .tl-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; margin-bottom: .4rem; }
+  .tl-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+  .tl-tag {
+    font-size: .75rem;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Interactive Learning Guide · 2026</div>
+  <h1>AI Developer<br><span>Mastery</span></h1>
+  <p>A deep-dive into Copilot, Claude Code, and Kiro — built specifically for developers ready to move from vibe coding to precision agentic engineering.</p>
+</section>
+
+<!-- NAV -->
+<nav class="nav-pills" id="nav">
+  <button class="pill active" onclick="show('roadmap')">🗺 Roadmap</button>
+  <button class="pill" onclick="show('copilot')">⚡ Copilot</button>
+  <button class="pill" onclick="show('claudecode')">🤖 Claude Code</button>
+  <button class="pill" onclick="show('kiro')">🚀 Kiro</button>
+  <button class="pill" onclick="show('compare')">⚖️ Compare</button>
+  <button class="pill" onclick="show('agents')">🧠 Agent vs Prompt</button>
+  <button class="pill" onclick="show('personas')">🎭 Personas & Models</button>
+  <button class="pill" onclick="show('hallucination')">🛡 No Hallucinations</button>
+  <button class="pill" onclick="show('quiz')">✅ Quiz</button>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════ ROADMAP ═══════════════════ -->
+<section id="roadmap" class="section active">
+  <div class="section-header">
+    <div class="section-icon icon-purple">🗺</div>
+    <div><h2>AI Developer Roadmap</h2><p>What a modern developer can build & master with AI tooling</p></div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 1 · Foundation</div>
+      <div class="tl-title">AI-Augmented Coding</div>
+      <p style="color:var(--muted);font-size:.9rem">Use AI as a co-pilot for completions, refactoring, and unit tests. Master prompting for code generation.</p>
+      <div class="tl-tags">
+        <span class="tl-tag">GitHub Copilot</span>
+        <span class="tl-tag">Claude Code CLI</span>
+        <span class="tl-tag">Prompt Engineering</span>
+        <span class="tl-tag">CLAUDE.md config</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot cyan"></div>
+      <div class="tl-phase">Phase 2 · Agentic</div>
+      <div class="tl-title">Multi-Step Agent Workflows</div>
+      <p style="color:var(--muted);font-size:.9rem">Build agents that plan, use tools, write files, run shell commands, and self-correct errors across your entire codebase.</p>
+      <div class="tl-tags">
+        <span class="tl-tag">Agent Mode</span>
+        <span class="tl-tag">MCP Servers</span>
+        <span class="tl-tag">Subagents</span>
+        <span class="tl-tag">Hooks</span>
+        <span class="tl-tag">Steering Files</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-phase">Phase 3 · Architecture</div>
+      <div class="tl-title">Spec-Driven & AI-Native Systems</div>
+      <p style="color:var(--muted);font-size:.9rem">Build systems where natural language requirements generate code. AI maintains tests, docs, and specs in sync.</p>
+      <div class="tl-tags">
+        <span class="tl-tag">Kiro Specs</span>
+        <span class="tl-tag">EARS Notation</span>
+        <span class="tl-tag">RAG Pipelines</span>
+        <span class="tl-tag">AWS Bedrock</span>
+        <span class="tl-tag">AI-generated PRs</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot green"></div>
+      <div class="tl-phase">Phase 4 · Expert</div>
+      <div class="tl-title">Custom Agent Harnesses & Infrastructure</div>
+      <p style="color:var(--muted);font-size:.9rem">Build your own multi-agent orchestration, fine-tuned personas, cost-optimized model routing, and zero-hallucination guardrails.</p>
+      <div class="tl-tags">
+        <span class="tl-tag">Anthropic SDK</span>
+        <span class="tl-tag">Model Routing</span>
+        <span class="tl-tag">Agent Harnesses</span>
+        <span class="tl-tag">Eval Frameworks</span>
+        <span class="tl-tag">SKILL.md</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>💡 You're Already Here</strong>
+    With AWS Bedrock, Azure OpenAI, RAG, and Kafka on your resume, you're entering Phase 2–3. This guide fills in the agentic tooling layer you're missing.
+  </div>
+</section>
+
+<!-- ═══════════════════ COPILOT ═══════════════════ -->
+<section id="copilot" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-cyan">⚡</div>
+    <div><h2>GitHub Copilot</h2><p>From autocomplete to full agentic coding partner</p></div>
+  </div>
+
+  <h3>How Copilot Works in 2026</h3>
+  <p>Copilot has three modes in VS Code:</p>
+  <div class="cards cards-3">
+    <div class="card">
+      <div class="card-title">Ask Mode</div>
+      <h3>Chat</h3>
+      <p>Q&A about your code. Doesn't edit files directly.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Edit Mode</div>
+      <h3>Edits</h3>
+      <p>Multi-file edits on files you specify. You control scope.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent1)">Agent Mode ★</div>
+      <h3>Agent</h3>
+      <p>Autonomous: plans tasks, runs terminal, iterates, self-heals errors across your whole codebase.</p>
+    </div>
+  </div>
+
+  <h3>Configuration: copilot-instructions.md</h3>
+  <p>Copilot reads a project-wide instruction file at <code style="color:var(--accent2)">.github/copilot-instructions.md</code>. Since July 2025 it also supports scoped files:</p>
+
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .github/instructions/typescript.instructions.md</div>
+    <pre><span class="cm">--- applyTo: "**/*.tsx" ---</span>
+<span class="str">Use functional components with TypeScript interfaces.</span>
+<span class="str">Always use server components unless client interactivity is needed.</span>
+<span class="str">Import from @/components — never use relative paths.</span>
+
+<span class="cm">--- applyTo: "**/*.java" ---</span>
+<span class="str">Use Spring Boot 3.x patterns.</span>
+<span class="str">Always add @Slf4j for logging. Never use System.out.println.</span>
+<span class="str">Use record types for immutable DTOs.</span></pre>
+  </div>
+
+  <h3>Confidence & Assumption Control</h3>
+  <div class="callout callout-warn">
+    <strong>⚠️ The Core Problem</strong>
+    Copilot assumes when it doesn't know. It will invent import paths, function signatures, and library versions. These "confident hallucinations" are the #1 source of bugs.
+  </div>
+
+  <p>Add these to your <code style="color:var(--accent2)">copilot-instructions.md</code> to reduce assumptions:</p>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .github/copilot-instructions.md — Confidence Rules</div>
+    <pre><span class="cm">## Assumption Rules</span>
+<span class="str">- If you are not certain about an import path, write a TODO comment instead of guessing.</span>
+<span class="str">- Never invent method signatures — only use what exists in the codebase.</span>
+<span class="str">- If a library version is unknown, use the version in package.json / pom.xml.</span>
+<span class="str">- Prefer explicit over clever. Never sacrifice readability for brevity.</span>
+<span class="str">- When asked to refactor, preserve all existing behavior unless told otherwise.</span>
+<span class="str">- Ask clarifying questions rather than assume intent on ambiguous prompts.</span></pre>
+  </div>
+
+  <h3>Agent Mode Settings (VS Code)</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><h4>Open Agent Mode</h4><p>Press <code style="color:var(--accent2)">Ctrl+Alt+I</code> → click the mode dropdown at top → select <strong>Agent</strong></p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><h4>Choose Your Model</h4><p>Agent mode supports Claude Sonnet 4.6, GPT-4.1, and Gemini 2.5 Pro depending on your plan. Pick from the model dropdown next to the mode selector.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><h4>Enable MCP Servers</h4><p>In Settings → GitHub Copilot → MCP Servers, add local or remote MCP endpoints. The GitHub local MCP server lets Copilot search issues and create PRs directly from VS Code.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><h4>Auto-Approve (JetBrains)</h4><p>Settings → GitHub Copilot → Chat → <strong>Auto Approve</strong>. Controls whether the agent can run terminal commands without pausing for confirmation.</p></div>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>📌 Org Admins</strong>
+    For Copilot Business/Enterprise: Settings → Copilot → Policies → enable "Copilot coding agent" and select which repos it applies to. Agent mode in the IDE is enabled by default but can be toggled per-org in the AI Controls tab.
+  </div>
+
+  <h3>Cloud Coding Agent (GitHub Issues → PRs)</h3>
+  <p>Copilot's cloud agent (separate from IDE agent mode) can be assigned GitHub Issues and will open PRs autonomously. To enable GitHub Actions to run on its PRs without manual approval: Repo Settings → Code & Automation → Copilot → Cloud Agent → toggle workflow auto-run.</p>
+  <div class="callout callout-danger">
+    <strong>🔴 Warning</strong>
+    Enabling auto-run for GitHub Actions workflows means unreviewed AI code can access your repo secrets. Always inspect proposed <code>.github/workflows/</code> changes before approving.
+  </div>
+</section>
+
+<!-- ═══════════════════ CLAUDE CODE ═══════════════════ -->
+<section id="claudecode" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-purple">🤖</div>
+    <div><h2>Claude Code</h2><p>Anthropic's terminal-first agentic coding tool</p></div>
+  </div>
+
+  <h3>Architecture Overview</h3>
+  <p>Claude Code is a CLI + VS Code / JetBrains extension that runs Claude as a coding agent with full terminal access. It uses a multi-agent architecture:</p>
+
+  <div class="cards cards-3">
+    <div class="card">
+      <div class="card-title">General Agent</div>
+      <h3>Main</h3>
+      <p>Full tool access. Inherits your CLAUDE.md context. Orchestrates subagents.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Explore Agent</div>
+      <h3>Read-Only</h3>
+      <p>Fast codebase search. No file edits. Used for navigation and discovery.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Plan Agent</div>
+      <h3>Architect</h3>
+      <p>Software design and implementation planning. Produces structured task lists before coding.</p>
+    </div>
+  </div>
+
+  <h3>Configuration File Hierarchy</h3>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Folder Structure</div>
+    <pre><span class="cm"># Files loaded in merge order (global → project → subdirectory)</span>
+~/.claude/CLAUDE.md          <span class="cm"># Your personal global rules (all projects)</span>
+./CLAUDE.md                  <span class="cm"># Project root (shared via git)</span>
+./src/CLAUDE.md              <span class="cm"># Subdirectory-scoped rules</span>
+
+.claude/
+  settings.json              <span class="cm"># Tool permissions, hooks config</span>
+  rules/
+    java.md                  <span class="cm"># Path-scoped rules</span>
+    tests.md
+  agents/
+    code-reviewer.md         <span class="cm"># Custom subagent definitions</span>
+  skills/
+    my-feature/SKILL.md      <span class="cm"># Reusable skills with slash commands</span></pre>
+  </div>
+
+  <h3>What Goes in CLAUDE.md</h3>
+  <div class="callout callout-warn">
+    <strong>⚠️ Instruction Budget</strong>
+    Claude Code's built-in system prompt uses ~50 instructions. You have ~100–150 left. When CLAUDE.md grows too large, instructions get lost — not from token overflow, but from attention degradation. Keep it focused.
+  </div>
+
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> CLAUDE.md — Example</div>
+    <pre><span class="cm"># Project: AirlineOps Microservices</span>
+
+<span class="str">## Tech Stack</span>
+<span class="str">Java 17, Spring Boot 3.2, Kafka, Solace PubSub+, DynamoDB, AWS</span>
+
+<span class="str">## Coding Rules</span>
+<span class="str">- Always use @Slf4j — never System.out.println</span>
+<span class="str">- Never assume a method exists — read the file first</span>
+<span class="str">- Every new service class needs a JUnit 5 + Mockito test</span>
+<span class="str">- Never modify pom.xml versions without explicit instruction</span>
+
+<span class="str">## Assumption Rules</span>
+<span class="str">- If uncertain about a Solace topic hierarchy, ask instead of guessing</span>
+<span class="str">- Never invent DynamoDB attribute names — check schema docs first</span>
+
+<span class="cm">@import .claude/rules/kafka.md</span>
+<span class="cm">@import .claude/rules/aws.md</span></pre>
+  </div>
+
+  <h3>Subagent Permission Controls (settings.json)</h3>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .claude/settings.json</div>
+    <pre>{
+  <span class="kw">"permissions"</span>: {
+    <span class="kw">"allow"</span>: [<span class="str">"Bash(git status)"</span>, <span class="str">"Bash(mvn test)"</span>],
+    <span class="kw">"deny"</span>:  [<span class="str">"Bash(rm -rf)"</span>, <span class="str">"Bash(kubectl delete)"</span>]
+  },
+  <span class="kw">"hooks"</span>: {
+    <span class="kw">"PreToolUse"</span>: [{
+      <span class="kw">"matcher"</span>: <span class="str">"Edit"</span>,
+      <span class="kw">"hooks"</span>:   [{ <span class="kw">"type"</span>: <span class="str">"command"</span>, <span class="kw">"command"</span>: <span class="str">"echo 'File edit: $TOOL_INPUT'"</span> }]
+    }]
+  }
+}</pre>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>💡 Subagent Safety Rule</strong>
+    Restrict subagents to read-only tool sets: remove Edit, Write, and Bash from their frontmatter <code>tools:</code> list. Let the parent agent handle all file writes after reviewing subagent output.
+  </div>
+
+  <h3>SKILL.md vs Slash Commands</h3>
+  <div class="vs-grid">
+    <div class="vs-card">
+      <h4>Slash Command</h4>
+      <ul>
+        <li>Inserts a prompt template</li>
+        <li>No domain logic</li>
+        <li>Use for: /review, /explain</li>
+        <li>Simple text substitution</li>
+      </ul>
+    </div>
+    <div class="vs-center"><div class="vs-badge">vs</div></div>
+    <div class="vs-card">
+      <h4>SKILL.md</h4>
+      <ul>
+        <li>Real domain logic + helper files</li>
+        <li>Structured input parameters</li>
+        <li>Use for: /deploy, /migrate-kafka</li>
+        <li>Shipped with scripts/tooling</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ KIRO ═══════════════════ -->
+<section id="kiro" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-amber">🚀</div>
+    <div><h2>Amazon Kiro</h2><p>AWS's spec-driven agentic IDE — code is a build artifact</p></div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>📌 Core Philosophy Difference</strong>
+    Copilot and Claude Code optimize for <strong>speed of output</strong> — prompt → code fast. Kiro optimizes for <strong>traceability and structure</strong> — requirements → design → tasks → code. For production AWS systems, Kiro is the most deliberate tool available.
+  </div>
+
+  <h3>The Spec-Driven Workflow</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><h4>Write a Feature Prompt</h4><p>Natural language description: "Add real-time flight delay notifications for passenger alerts via SNS."</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><h4>Kiro Generates a Spec</h4><p>Kiro creates a formal requirements doc in EARS notation (Easy Approach to Requirements Syntax), a design doc, and a structured task list.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><h4>You Review & Approve</h4><p>Before a single line of code is written, you sign off on what will be built. This is the key differentiator — the spec is source of truth, code is the artifact.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><h4>Agents Generate Code</h4><p>Claude Sonnet (reasoning-heavy specs) + Amazon Nova (high-throughput code gen) via Bedrock execute the tasks. Tests are generated alongside code.</p></div>
+    </div>
+  </div>
+
+  <h3>Steering Files (The "CLAUDE.md" of Kiro)</h3>
+  <p>Steering files live at <code style="color:var(--accent2)">.kiro/steering/</code> and give Kiro persistent context across sessions and contributors:</p>
+
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .kiro/steering/engineering-standards.md</div>
+    <pre><span class="str">## Security</span>
+<span class="str">All database queries must use parameterized statements.</span>
+<span class="str">Never log PII — mask passenger names and emails in all log output.</span>
+
+<span class="str">## Observability</span>
+<span class="str">Always use the internal LoggingService — never console.log or System.out.println.</span>
+<span class="str">Add Dynatrace trace IDs to all Kafka message headers.</span>
+
+<span class="str">## AWS</span>
+<span class="str">All Lambda functions must have Dead Letter Queues configured.</span>
+<span class="str">Use us-east-1 as primary, us-west-2 as DR region for all new resources.</span></pre>
+  </div>
+
+  <h3>Agent Hooks (Event-Driven Automation)</h3>
+  <p>Hooks fire on IDE events and run predefined agent actions in the background — before code reaches CI/CD:</p>
+
+  <div class="cards cards-2">
+    <div class="card">
+      <div class="card-title">On File Save</div>
+      <h3>Auto-sync Docs</h3>
+      <p>When you save a service class, Kiro automatically updates the corresponding spec/design doc to reflect the implementation.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">On PR Open</div>
+      <h3>Test Generation</h3>
+      <p>When a PR is opened, Kiro generates missing unit tests and checks that code matches the approved spec.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">On Commit</div>
+      <h3>Compliance Check</h3>
+      <p>Verifies steering rules: parameterized SQL, no PII logging, correct logging library.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">On File Create</div>
+      <h3>Boilerplate Injection</h3>
+      <p>New Java class? Kiro adds the standard header, @Slf4j, copyright comment, and test stub automatically.</p>
+    </div>
+  </div>
+
+  <h3>Confidence & Assumption Settings in Kiro</h3>
+  <div class="callout callout-warn">
+    <strong>⚠️ Kiro's Secret Weapon</strong>
+    The spec review step is your assumption control. By approving the requirements and design before code is written, you've already eliminated the biggest source of assumptions. Kiro can't build the wrong thing if you approved what it will build.
+  </div>
+
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .kiro/steering/no-assumptions.md</div>
+    <pre><span class="str">## Assumption Policy</span>
+<span class="str">- If a requirement is ambiguous, generate a clarifying question in the spec — do NOT assume.</span>
+<span class="str">- Never introduce a new dependency without adding it to the spec's tech-choices section.</span>
+<span class="str">- When referencing an existing service, read its interface definition file before using it.</span>
+<span class="str">- If a DynamoDB table schema is not in the spec, halt and ask before writing data access code.</span></pre>
+  </div>
+
+  <h3>Pricing (2026)</h3>
+  <div class="cards cards-2">
+    <div class="card">
+      <div class="card-title">Free Tier</div>
+      <h3>50 interactions/month</h3>
+      <p>Good for trying Kiro. Interactions count per spec generation + agent task run.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent3)">Pro</div>
+      <h3>$19/month</h3>
+      <p>Full access, all hooks, all steering features. Built on AWS Bedrock (Claude Sonnet + Amazon Nova routing).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ COMPARE ═══════════════════ -->
+<section id="compare" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-indigo">⚖️</div>
+    <div><h2>Tool Comparison</h2><p>Choosing the right tool for the job</p></div>
+  </div>
+
+  <table class="compare-table">
+    <tr>
+      <th>Dimension</th>
+      <th>GitHub Copilot</th>
+      <th>Claude Code</th>
+      <th>Amazon Kiro</th>
+    </tr>
+    <tr>
+      <td><strong>Philosophy</strong></td>
+      <td>Speed — suggest → accept</td>
+      <td>Power — full terminal agent</td>
+      <td>Structure — spec → code</td>
+    </tr>
+    <tr>
+      <td><strong>Config File</strong></td>
+      <td><span class="badge badge-cyan">.github/copilot-instructions.md</span></td>
+      <td><span class="badge badge-purple">CLAUDE.md</span></td>
+      <td><span class="badge badge-amber">.kiro/steering/*.md</span></td>
+    </tr>
+    <tr>
+      <td><strong>Model</strong></td>
+      <td>Claude / GPT-4.1 / Gemini (your choice)</td>
+      <td>Claude only (Sonnet 4.6 default)</td>
+      <td>Claude Sonnet + Amazon Nova (auto-routed)</td>
+    </tr>
+    <tr>
+      <td><strong>Assumption Control</strong></td>
+      <td>Instructions in config file</td>
+      <td>CLAUDE.md rules + tool permissions</td>
+      <td>Spec approval gate (structural)</td>
+    </tr>
+    <tr>
+      <td><strong>Best For</strong></td>
+      <td>Day-to-day coding, PR workflows</td>
+      <td>Complex refactors, migrations, terminal tasks</td>
+      <td>New features on production AWS systems</td>
+    </tr>
+    <tr>
+      <td><strong>AWS Integration</strong></td>
+      <td>Via MCP server</td>
+      <td>Via MCP + Bash</td>
+      <td>Native (Bedrock, CodeCatalyst, Q Developer)</td>
+    </tr>
+    <tr>
+      <td><strong>Multi-Agent</strong></td>
+      <td>Single agent + cloud coding agent</td>
+      <td>Full subagent orchestration</td>
+      <td>Spec → design → code agents</td>
+    </tr>
+    <tr>
+      <td><strong>Risk Level</strong></td>
+      <td>Medium (review changes)</td>
+      <td>Medium (permission hooks help)</td>
+      <td>Lower (spec gate) but high if spec is wrong</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-tip">
+    <strong>💡 Real-World Combo for Your Stack</strong>
+    Use <strong>Copilot</strong> for day-to-day Spring Boot + Angular edits. Use <strong>Claude Code</strong> for Kafka-to-Solace migrations and infrastructure scripting. Use <strong>Kiro</strong> for new AWS-native features where you need full traceability.
+  </div>
+</section>
+
+<!-- ═══════════════════ AGENT VS PROMPT ═══════════════════ -->
+<section id="agents" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-green">🧠</div>
+    <div><h2>Agent vs Prompt .md</h2><p>The most misunderstood distinction in agentic AI</p></div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>📌 The Core Distinction</strong>
+    A <strong>prompt</strong> is a one-shot instruction inserted into a conversation. An <strong>agent</strong> is an entity with its own context window, tool access, and goal-completion loop that runs until the task is done or it hits a boundary.
+  </div>
+
+  <div class="vs-grid">
+    <div class="vs-card">
+      <h4>Prompt (.md as template)</h4>
+      <ul>
+        <li>Inserted into <em>your</em> conversation</li>
+        <li>Runs once — you see the output</li>
+        <li>No isolated context window</li>
+        <li>No tool access of its own</li>
+        <li>Example: /review slash command</li>
+        <li>Like a chef reading a recipe card</li>
+      </ul>
+    </div>
+    <div class="vs-center"><div class="vs-badge">vs</div></div>
+    <div class="vs-card">
+      <h4>Agent (.md as definition)</h4>
+      <ul>
+        <li>Spawned with its <em>own</em> context window</li>
+        <li>Loops until goal is achieved</li>
+        <li>Has its own tool set (read, write, bash)</li>
+        <li>Runs in parallel or in sequence</li>
+        <li>Example: Explore subagent in Claude Code</li>
+        <li>Like hiring a contractor with a brief</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>What's Actually in an Agent .md File</h3>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .claude/agents/kafka-reviewer.md — Agent Definition</div>
+    <pre><span class="cm">---
+name: kafka-reviewer
+description: "Reviews Kafka consumer/producer code for schema contract compliance and DLQ configuration"
+tools:
+  - Read          # allowed
+  - Bash(grep)    # allowed
+  # Edit is NOT listed — this agent is read-only
+---</span>
+
+<span class="str">You are a Kafka code reviewer focused on Prashanth's airline messaging platform.</span>
+
+<span class="str">When invoked, you MUST:</span>
+<span class="str">1. Read the target file before commenting (never assume its contents)</span>
+<span class="str">2. Check that all consumers have Dead Letter Queue configuration</span>
+<span class="str">3. Verify message schema validation against the company schema registry</span>
+<span class="str">4. Flag any hardcoded topic names — they should come from application.yaml</span>
+<span class="str">5. Return findings as a structured list with file:line references</span>
+
+<span class="str">If uncertain, say "I need to read X before I can assess this."</span>
+<span class="str">Never invent code or assume message schemas. Read first, always.</span></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .claude/rules/kafka.md — Prompt Template</div>
+    <pre><span class="cm"># This is a RULE (prompt context), not an agent</span>
+<span class="cm"># It's merged into CLAUDE.md and applied to all interactions</span>
+
+<span class="str">## Kafka Rules</span>
+<span class="str">- All consumers must have DLQ configuration</span>
+<span class="str">- Use Spring Kafka's @KafkaListener — never raw KafkaConsumer</span>
+<span class="str">- Topic names must be read from application.yaml, never hardcoded</span></pre>
+  </div>
+
+  <h3>The 4 Key Differences</h3>
+  <table class="compare-table">
+    <tr><th>Property</th><th>Prompt</th><th>Agent</th></tr>
+    <tr><td>Context Window</td><td>Shared with you</td><td>Isolated — its own</td></tr>
+    <tr><td>Execution</td><td>One shot</td><td>Loop until done / budget exhausted</td></tr>
+    <tr><td>Tool Access</td><td>Uses your session's tools</td><td>Defined in frontmatter</td></tr>
+    <tr><td>Parallelism</td><td>Sequential</td><td>Can run in parallel with other agents</td></tr>
+  </table>
+
+  <div class="callout callout-tip">
+    <strong>💡 When to Use Which</strong>
+    Use a <strong>prompt/rule</strong> when the instruction is a style or coding standard that should always be active. Use an <strong>agent</strong> when the task needs file exploration, multi-step reasoning, or domain expertise that you want isolated from the main conversation's context.
+  </div>
+</section>
+
+<!-- ═══════════════════ PERSONAS & MODELS ═══════════════════ -->
+<section id="personas" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-red">🎭</div>
+    <div><h2>Personas & Model Assignment</h2><p>Give your agents identity, role, and the right model</p></div>
+  </div>
+
+  <h3>Assigning a Persona to a Prompt</h3>
+  <p>A persona shapes how the AI responds — its expertise, tone, and decision-making style. In your CLAUDE.md or copilot-instructions.md:</p>
+
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> CLAUDE.md — Persona Definition</div>
+    <pre><span class="str">## Your Identity</span>
+<span class="str">You are a senior distributed systems engineer specializing in airline operations infrastructure.</span>
+<span class="str">You have deep expertise in Java/Spring Boot, Kafka, Solace PubSub+, and AWS.</span>
+<span class="str">You think like an SRE: always consider failure modes, DLQs, and observability first.</span>
+<span class="str">You prefer explicit, readable code over clever one-liners.</span>
+<span class="str">When reviewing code, you ask: "What happens when this fails at 3am?"</span></pre>
+  </div>
+
+  <h3>Assigning a Persona to an Agent</h3>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> .claude/agents/security-auditor.md</div>
+    <pre><span class="cm">---
+name: security-auditor
+description: "OWASP-focused security review for REST APIs and Spring Boot services"
+tools:
+  - Read
+  - Bash(grep)
+---</span>
+
+<span class="str">You are a security engineer with OWASP expertise reviewing airline passenger data APIs.</span>
+<span class="str">You are adversarial by nature — you look for what could go wrong, not what works.</span>
+
+<span class="str">Always check:</span>
+<span class="str">- SQL injection: are all queries parameterized?</span>
+<span class="str">- Auth: does every endpoint verify JWT claims?</span>
+<span class="str">- PII: is passenger data masked in logs?</span>
+<span class="str">- IDOR: can a user access another user's records by changing an ID?</span></pre>
+  </div>
+
+  <h3>Model Assignment by Tool</h3>
+  <table class="compare-table">
+    <tr><th>Tool</th><th>How to Set Model</th><th>Best Model For Task</th></tr>
+    <tr>
+      <td>GitHub Copilot</td>
+      <td>Model dropdown in Chat/Agent panel</td>
+      <td>Claude Sonnet 4.6 for complex reasoning; GPT-4.1 for speed</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td><code style="color:var(--accent2)">claude --model claude-sonnet-4-6</code> or set in settings.json</td>
+      <td>Sonnet 4.6 default; Opus 4.6 for architecture decisions</td>
+    </tr>
+    <tr>
+      <td>Kiro</td>
+      <td>Auto-routed by Bedrock: Claude Sonnet for specs, Nova for code gen</td>
+      <td>No manual override needed — routing is automatic</td>
+    </tr>
+  </table>
+
+  <h3>Model Assignment in the Claude Code SDK</h3>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Assign model per agent (SDK)</div>
+    <pre><span class="kw">import</span> { query } <span class="kw">from</span> <span class="str">"@anthropic-ai/claude-agent-sdk"</span>;
+
+<span class="cm">// Architect agent — use Opus for deep reasoning</span>
+<span class="kw">const</span> plan = <span class="kw">await</span> <span class="fn">query</span>({
+  model: <span class="str">"claude-opus-4-6"</span>,
+  system: <span class="str">"You are a distributed systems architect. Design before code."</span>,
+  prompt: <span class="str">"Design the Solace migration for our baggage tracking system."</span>
+});
+
+<span class="cm">// Code generation — use Sonnet for speed + quality balance</span>
+<span class="kw">const</span> code = <span class="kw">await</span> <span class="fn">query</span>({
+  model: <span class="str">"claude-sonnet-4-6"</span>,
+  system: <span class="str">"Implement the design. Prefer explicit over clever. Add JUnit tests."</span>,
+  prompt: plan.result
+});</pre>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>💡 Cost Optimization Pattern</strong>
+    Use Opus for planning and Sonnet for execution. A well-designed plan from Opus typically reduces total Sonnet calls because the implementation is clearer — net cost is often lower than using Sonnet for everything.
+  </div>
+</section>
+
+<!-- ═══════════════════ HALLUCINATION ═══════════════════ -->
+<section id="hallucination" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-red">🛡</div>
+    <div><h2>Eliminating Hallucinations</h2><p>Generate code that is grounded, verified, and assumption-free</p></div>
+  </div>
+
+  <div class="callout callout-danger">
+    <strong>🔴 What Hallucination Looks Like in Code</strong>
+    The AI invents a method that doesn't exist. It uses a library version that has a different API. It references a DynamoDB table with the wrong attribute name. It creates an import path for a package that doesn't exist. These look like working code — until they don't.
+  </div>
+
+  <h3>The 7 Rules for Hallucination-Free Code</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Read Before Answering</h4>
+        <p>Add this to every CLAUDE.md: <em>"Never speculate about code you have not opened. Read the file before referencing it."</em> This single instruction eliminates most hallucinated method/class references.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Allow "I Don't Know"</h4>
+        <p>Explicitly tell the agent it can say it's uncertain: <em>"If you are not confident in a method signature or package version, say so instead of guessing."</em> LLMs hallucinate less when you remove the pressure to always answer.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Ground Imports in package.json / pom.xml</h4>
+        <p>Add to your config: <em>"Only use library versions that appear in pom.xml or package.json. Never import a dependency that isn't listed."</em></p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Use the Spec Approval Gate (Kiro)</h4>
+        <p>In Kiro, review the spec before code is generated. If the spec contains an incorrect assumption, fix it there — the code will be correct downstream.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Best-of-N Verification</h4>
+        <p>For critical code paths, run the same prompt 2–3 times and compare outputs. Inconsistencies across runs indicate hallucinations — consistent outputs are far more likely to be grounded.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Cite Your Sources</h4>
+        <p>Ask the agent to cite which file and line number justifies each decision: <em>"For every code change, add a comment referencing the file you read that justified this approach."</em></p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h4>Restrict External Knowledge</h4>
+        <p>For domain-specific code: <em>"Use only information from files in this repository. Do not use general knowledge about how this library typically works — read the actual implementation."</em></p>
+      </div>
+    </div>
+  </div>
+
+  <h3>The Anti-Hallucination CLAUDE.md Block</h3>
+  <div class="code-block">
+    <div class="code-label"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Copy this into every CLAUDE.md</div>
+    <pre><span class="str">## Anti-Hallucination Rules (Non-Negotiable)</span>
+
+<span class="str">### Before Writing Code</span>
+<span class="str">- Read the relevant source files BEFORE writing or modifying code</span>
+<span class="str">- Never assume a method, field, or class exists — verify it</span>
+<span class="str">- Only reference imports that exist in pom.xml or package.json</span>
+
+<span class="str">### When Uncertain</span>
+<span class="str">- Say "I need to read X to answer this" — never guess</span>
+<span class="str">- If a schema or interface is not in the files you've read, ask for it</span>
+<span class="str">- Write a TODO comment rather than inventing an implementation</span>
+
+<span class="str">### Verification</span>
+<span class="str">- After writing code, trace each import back to its source file</span>
+<span class="str">- For any DynamoDB attribute or Kafka topic name used, confirm it in the schema docs</span>
+<span class="str">- Run the tests you've written — if they fail due to your code, fix it before finishing</span></pre>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>💡 The Grounding Prompt Pattern</strong>
+    For any complex task: start with "First, read [file list]. Then summarize what you found. Then, and only then, write the implementation." This enforces reading before writing, eliminates 90% of hallucinated references.
+  </div>
+</section>
+
+<!-- ═══════════════════ QUIZ ═══════════════════ -->
+<section id="quiz" class="section">
+  <div class="section-header">
+    <div class="section-icon icon-green">✅</div>
+    <div><h2>Knowledge Check</h2><p>Test what you've learned</p></div>
+  </div>
+
+  <div id="quiz-container"></div>
+  <div style="margin-top:1.5rem;text-align:center">
+    <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:0%"></div></div>
+    <span id="quiz-score" style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--muted)">0 / 0 answered</span>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<div style="height:4rem"></div>
+
+<script>
+// ── Navigation ──
+const pills = document.querySelectorAll('.pill');
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  pills.forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo({top: document.getElementById('nav').offsetTop - 10, behavior: 'smooth'});
+}
+
+// ── Quiz ──
+const questions = [
+  {
+    q: "Where does GitHub Copilot look for project-wide instructions?",
+    opts: [
+      ".github/copilot-instructions.md",
+      "CLAUDE.md in the project root",
+      ".kiro/steering/instructions.md",
+      "settings.json in .vscode"
+    ],
+    answer: 0,
+    feedback: "Since July 2025, Copilot reads from .github/copilot-instructions.md for global rules, and .github/instructions/*.instructions.md for scoped rules."
+  },
+  {
+    q: "What is the key structural difference between an Agent .md and a Prompt .md in Claude Code?",
+    opts: [
+      "Agents use YAML frontmatter, prompts use plain markdown",
+      "Agents have their own isolated context window and tool set; prompts are inserted into your session",
+      "Agents are stored in .claude/rules/, prompts in .claude/agents/",
+      "Prompts can run terminal commands, agents cannot"
+    ],
+    answer: 1,
+    feedback: "An agent has its own context window, runs in a loop until the task is done, and has a defined tool set in its frontmatter. A prompt is a template inserted into the current conversation."
+  },
+  {
+    q: "In Kiro, what is the most effective mechanism for preventing assumption-based code generation?",
+    opts: [
+      "Writing detailed steering files",
+      "Using Claude Sonnet instead of Nova",
+      "The spec approval gate — reviewing requirements before code is written",
+      "Setting Auto-Approve to Off in settings"
+    ],
+    answer: 2,
+    feedback: "Kiro's spec-driven model means you approve requirements and design before any code is generated. This is a structural guardrail — the agent literally cannot build the wrong thing if you've approved what it will build."
+  },
+  {
+    q: "Which single instruction most effectively reduces hallucinated method references in Claude Code?",
+    opts: [
+      "Use a lower temperature",
+      "Never speculate — read the file before referencing it",
+      "Run the agent twice and compare",
+      "Add more detail to CLAUDE.md"
+    ],
+    answer: 1,
+    feedback: "Instructing the agent to read files before referencing them is the #1 anti-hallucination technique. It forces grounding in actual code rather than LLM priors about how the code 'should' work."
+  },
+  {
+    q: "When should you use a SKILL.md vs a slash command in Claude Code?",
+    opts: [
+      "Skills for short prompts, slash commands for long ones",
+      "Slash commands when there is real domain logic and helper files; skills for simple template insertion",
+      "Skills when there is real domain logic and helper files; slash commands for simple template insertion",
+      "They are interchangeable — use whichever is easier"
+    ],
+    answer: 2,
+    feedback: "Use a SKILL.md when the workflow involves real domain logic, structured parameters, or ships with helper scripts/tools. Use a slash command when you just need to insert a prompt template."
+  },
+  {
+    q: "You're migrating EMS to Solace (like in your current role). Which tool is best suited for this multi-day, multi-file migration task?",
+    opts: [
+      "GitHub Copilot inline completions",
+      "Claude Code in agent mode with a custom Solace migration agent",
+      "Kiro spec-driven development",
+      "Kiro Hooks triggered on file save"
+    ],
+    answer: 1,
+    feedback: "Claude Code's full terminal agent mode, with a custom agent that understands Solace topic hierarchies and schema contracts, is ideal for complex cross-codebase migrations. Kiro is better for new feature development with full traceability."
+  }
+];
+
+let answered = 0;
+const container = document.getElementById('quiz-container');
+
+questions.forEach((q, qi) => {
+  const div = document.createElement('div');
+  div.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem';
+  div.innerHTML = `
+    <div class="quiz-q" style="font-family:'Syne',sans-serif;font-size:1rem;margin-bottom:.75rem">
+      <span style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.75rem">Q${qi+1} of ${questions.length}</span><br>
+      ${q.q}
+    </div>
+    <div class="quiz-options">
+      ${q.opts.map((o, oi) => `<button class="quiz-opt" onclick="answer(this,${qi},${oi})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="fb-${qi}"><strong>💡</strong> ${q.feedback}</div>
+  `;
+  container.appendChild(div);
+});
+
+function answer(btn, qi, oi) {
+  const btns = btn.parentElement.querySelectorAll('.quiz-opt');
+  btns.forEach(b => b.disabled = true);
+  if (oi === questions[qi].answer) {
+    btn.classList.add('correct');
+    answered++;
+  } else {
+    btn.classList.add('wrong');
+    btns[questions[qi].answer].classList.add('correct');
+  }
+  document.getElementById('fb-' + qi).classList.add('show');
+  document.getElementById('quiz-score').textContent = `${answered} / ${questions.length} correct`;
+  document.getElementById('quiz-progress').style.width = `${(answered/questions.length)*100}%`;
+}
+</script>
+</body>
+</html>
